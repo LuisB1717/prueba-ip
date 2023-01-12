@@ -1,5 +1,6 @@
 const btnAgregar = document.getElementById("button");
 const listUsers = document.getElementById("content");
+const head = document.getElementById("head");
 
 btnAgregar.addEventListener("click", (e) => {
   e.preventDefault();
@@ -53,15 +54,23 @@ function renderUsers() {
     .map(
       (user) =>
         `
-      <div class= "contentList">
-        <div class="column">${user.dni}</div>
-        <div class="column">${user.name}</div>
-        <div class="column">${user.lastname}</div>
-      </div>
-        
+        <div class="row">
+          <div class="cell">
+           <p>${user.dni}</p>
+          </div>
+
+          <div class="cell">
+            <p>${user.name}</p>
+          </div>
+
+         <div class="cell">
+            <p>${user.lastname}</p>
+          </div>
+        </div>
+
      `
     )
     .join("")}`;
 
-  listUsers.innerHTML = html;
+  listUsers.insertAdjacentHTML("beforeend", html);
 }

@@ -15,6 +15,7 @@
   </head>
   <body>
     <form class="formulario">
+      <p class="title">Agregar usuario</p>
       <label>DNI</label>
       <input type="text" id="dni" />
       <label>Nombre</label>
@@ -26,7 +27,19 @@
       <button class="btn-agregar" id="button">Agregar</button>
     </form>
 
-    <div class="table" id="content"></div>
+    <div class="table" id="content">
+      <div class="head" id="head">
+        <div class="cell">
+          <p>DNI</p>
+        </div>
+        <div class="cell">
+          <p>Nombre</p>
+        </div>
+        <div class="cell">
+          <p>Apellidos</p>
+        </div>
+      </div>
+    </div>
 
     <script src="./main.js"></script>
   </body>
