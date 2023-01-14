@@ -1,6 +1,7 @@
 const btnAgregar = document.getElementById("button");
 const listUsers = document.getElementById("content");
 const head = document.getElementById("head");
+const iconState = document.getElementById("state");
 
 btnAgregar.addEventListener("click", (e) => {
   e.preventDefault();
@@ -24,13 +25,17 @@ function saveUser() {
     return;
   }
 
-  saveLocalStogare({ dni, name, lastname, password, active: true });
+  saveUserLocalStorage({ dni, name, lastname, password, active: true });
   renderUsers();
-
   alert("Usuario agregado");
+
+  document.getElementById("dni").value = "";
+  document.getElementById("name").value = "";
+  document.getElementById("lastname").value = "";
+  document.getElementById("password").value = "";
 }
 
-function saveLocalStogare(user) {
+function saveUserLocalStorage(user) {
   let users = localStorage.getItem("users");
   if (!users) {
     users = [];
@@ -47,30 +52,70 @@ function getUsers() {
   return JSON.parse(users);
 }
 
+function toggleUser(dni) {
+  const users = getUsers();
+  const indexUser = users.findIndex((user) => user.dni == dni);
+  const newUsers = [...users];
+
+  newUsers[indexUser].active
+    ? (newUsers[indexUser].active = false)
+    : (newUsers[indexUser].active = true);
+
+  localStorage.setItem("users", JSON.stringify(newUsers));
+  renderUsers();
+}
+
+function deleteUser(dni) {
+  const users = getUsers();
+  const indexUser = users.findIndex((user) => user.dni == dni);
+  const newUsers = [...users];
+
+  newUsers.splice(indexUser, 1);
+  localStorage.setItem("users", JSON.stringify(newUsers));
+  alert("Eliminado");
+  renderUsers();
+}
+
 function renderUsers() {
   const users = getUsers();
-  console.log(users);
-  const html = `${users
-    .map(
-      (user) =>
-        `
-        <div class="row">
-          <div class="cell">
-           <p>${user.dni}</p>
-          </div>
+  let html = "";
 
-          <div class="cell">
-            <p>${user.name}</p>
-          </div>
+  if (users.length == 0) {
+    html = "<p>No se encontraron usuarios</p>";
+  } else {
+    html = `${users
+      .map(
+        (user) =>
+          `
+            <div class="row ">
+              <div class="cell">
+               <p>${user.dni}</p>
+              </div>
+    
+              <div class="cell">
+                <p>${user.name}</p>
+              </div>
+    
+             <div class="cell">
+                <p>${user.lastname}</p>
+              </div>
+             <div class="cell">
+                 <span class="icon-check ${
+                   user.active && "icon-check-active"
+                 }" onclick="toggleUser(${user.dni})">✓</span>
+              </div>
+             <div class="cell">
+                <button class="btn-delete" onclick="deleteUser(${
+                  user.dni
+                })">Eliminar</button>
+              </div>
+            </div>
+    
+         `
+      )
+      .join("")}`;
+  }
 
-         <div class="cell">
-            <p>${user.lastname}</p>
-          </div>
-        </div>
-
-     `
-    )
-    .join("")}`;
-
-  listUsers.insertAdjacentHTML("beforeend", html);
+  listUsers.innerHTML = html;
+  // listUsers.insertAdjacentHTML("beforeend", html);
 }
